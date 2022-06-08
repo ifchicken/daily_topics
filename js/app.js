@@ -1,5 +1,5 @@
 
-map = {
+topics = {
   1: "Do you love working from homw or would you rather be in the office?",
   2: "What's the hardest part about working virtually for you? The easiest?",
   3: "Show us your office space",
@@ -108,6 +108,9 @@ map = {
   104: "What's the best birthday or Christmas present you remember getting when you were a kid?",
 };
 
+additional_topics = {
+};
+
 Math.seed = function(s) {
   return function() {
       s = Math.sin(s) * 10000;
@@ -121,22 +124,32 @@ function date_of_the_year() {
   var diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
   var oneDay = 1000 * 60 * 60 * 24;
   var day = Math.floor(diff / oneDay);
-  console.log('Day of year: ' + day);
-
-  return day;
+  var res = [now.getFullYear(), day];
+  return res;
 }
 
 
 function start() {
-
+  console.log("alvin");
+  [year, day] = date_of_the_year();
+  console.log("year and day: ", year, day);
+  
   // usage for seed:
-  const random1 = Math.seed(date_of_the_year());
+  const random1 = Math.seed(year);
   const random2 = Math.seed(random1());
   Math.random = Math.seed(random2());
 
-  const n = Math.floor(Math.random() * Object.keys(map).length) + 1;
-  console.log('random value: ', n);
-  document.getElementById("alvin").innerHTML = map[n];
+  // const n = Math.floor(Math.random() * Object.keys(topics).length) + 1;
+  list = Object.values(topics);
+  list.sort(() => Math.random() - 0.5);
+  // const complete_list = list.concat(Object.values(additional_topics));
+  // console.log('complete_list length: ', Object.keys(complete_list).length);
+
+  mod_number = Object.keys(topics).length;
+  index = day % mod_number;
+  
+  console.log('random value: ', index, mod_number);
+  document.getElementById("alvin").innerHTML = topics[index];
 }
 
 start();
