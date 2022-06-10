@@ -111,6 +111,9 @@ topics = {
 additional_topics = {
 };
 
+// const complete_list = list.concat(Object.values(additional_topics));
+// console.log('complete_list length: ', Object.keys(complete_list).length);
+
 Math.seed = function(s) {
   return function() {
       s = Math.sin(s) * 10000;
@@ -119,37 +122,60 @@ Math.seed = function(s) {
 };
 
 function date_of_the_year() {
-  var now = new Date();
-  var start = new Date(now.getFullYear(), 0, 0);
-  var diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
-  var oneDay = 1000 * 60 * 60 * 24;
-  var day = Math.floor(diff / oneDay);
-  var res = [now.getFullYear(), day];
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+  const oneDay = 1000 * 60 * 60 * 24;
+  const day = Math.floor(diff / oneDay);
+  const res = [now.getFullYear(), day];
   return res;
 }
 
 
-function start() {
-  console.log("alvin");
-  [year, day] = date_of_the_year();
-  console.log("year and day: ", year, day);
-  
-  // usage for seed:
-  const random1 = Math.seed(year);
-  const random2 = Math.seed(random1());
-  Math.random = Math.seed(random2());
+console.log("alvin");
+[year, day] = date_of_the_year();
+console.log("year and day: ", year, day);
 
-  // const n = Math.floor(Math.random() * Object.keys(topics).length) + 1;
-  list = Object.values(topics);
-  list.sort(() => Math.random() - 0.5);
-  // const complete_list = list.concat(Object.values(additional_topics));
-  // console.log('complete_list length: ', Object.keys(complete_list).length);
+// usage for seed:
+const random1 = Math.seed(year);
+const random2 = Math.seed(random1());
+Math.random = Math.seed(random2());
+list = Object.values(topics);
+list.sort(() => Math.random() - 0.5);  
+mod_number = Object.keys(topics).length;
+index = day % mod_number;
 
-  mod_number = Object.keys(topics).length;
-  index = day % mod_number;
-  
+function start() {  
   console.log('random value: ', index, mod_number);
   document.getElementById("alvin").innerHTML = topics[index];
+}
+
+const content0 = document.getElementById("content0");
+const btn2 = document.getElementById("btn2");
+
+function randomTopic() {
+  let li = document.createElement('li');
+  let parent = content0.parentNode;
+  parent.replaceChild(li, content0);
+  li.appendChild(content0);
+
+  const index = Math.floor(Math.random() * Object.keys(topics).length) + 1;
+  content0.innerHTML = topics[index];
+}
+
+function next10Topic() {
+  for (let i = 0; i < 10; i++) {
+    let id = "content" + (i + 1);
+    let content = document.getElementById(id);
+
+    let li = document.createElement('li');
+    let parent = content.parentNode;
+    parent.replaceChild(li, content);
+    li.appendChild(content);    
+    
+    content.innerHTML = topics[(index + i) % mod_number];
+  }
+  btn2.disabled = true;
 }
 
 start();
